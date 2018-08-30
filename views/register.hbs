@@ -5,7 +5,9 @@
 
 {{#if errors}}
   {{#each errors}}
-      <div>{{msg}}</div> 
+    <div class="alert alert-danger" role="alert">
+      {{msg}}
+    </div>
   {{/each}}
 {{/if}}
 
