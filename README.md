@@ -4,8 +4,17 @@
 # 工程结构
 webpack + nodemon
 
+# 模板引擎
+handlerbars
 
 # 项目依赖
+mysqljs/mysql
+dotenv 
+
+# 实现
+## 表单验证
+通过 express-validator 和 数据库索引 实现后台表单验证.
+
 
 
 

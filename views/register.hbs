@@ -2,6 +2,13 @@
 <div class="container"> 
   <h1>{{title}}</h1>
 
+
+{{#if errors}}
+  {{#each errors}}
+      <div>{{msg}}</div> 
+  {{/each}}
+{{/if}}
+
   <form action='/register' method="POST" >
   <div class="form-group">
     <label for="username">Username</label>
