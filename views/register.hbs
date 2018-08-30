@@ -1,0 +1,29 @@
+{{> header }}
+<div class="container"> 
+  <h1>{{title}}</h1>
+
+  <form action='/register' method="POST" >
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" name='username' class="form-control" id="username"  placeholder="Enter username">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" name='email' class="form-control" id="email"  placeholder="Enter email">
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" name='password' class="form-control" id="password" placeholder="Password">
+  </div>
+
+  <div class="form-group">
+    <label for="passwordMatch">Re-Input Your Password</label>
+    <input type="password" name="passwordMatch" class="form-control" id="passwordMatch" placeholder="Please re-input your password">
+  </div>
+
+<input class="btn btn-primary" type="submit" value="Submit">
+
+</div>
+{{> footer-end }}
