@@ -13,7 +13,7 @@ dotenv
 
 # 实现
 ## 表单验证
-通过 express-validator 和 数据库索引 实现后台表单验证.
+通过 express-validator 实现后台表单验证.
 
 
 
