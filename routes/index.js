@@ -1,14 +1,26 @@
 const express = require('express');
 const router = express.Router(); 
 const bcrypt = require('bcrypt')
+const passport = require('passport')
 
-const { check, body, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
-/* GET home page. */
+/* GET home page. */ 
+router.get('/', function(req, res, next) { 
+
+  console.log("req.user:", req.user)
+  console.log("req.isAuthenticated():", req.isAuthenticated())
+  res.render('home', { title: 'Homepage' });
+});
+
+
+/* GET register page. */
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'registration' });
 });
 
+
+/* post register user */
 router.post(
   '/register', 
   [
@@ -37,23 +49,47 @@ router.post(
     }   
 
     else{
+      const db = require('../db.js') 
+
       // hash user password
-      const connection = require('../db.js') 
-
       const saltRounds = 10
-      bcrypt.hash(password, saltRounds, ()=>{
+      bcrypt.hash(password, saltRounds, (err, hashResult)=>{
 
-        // query starts here
+        // create user in database
         let query = `INSERT INTO users (username, email, password) VALUES (?,?,?)` 
-        connection.query(query, [username, email, password], (err, results, fields)=>{
+        db.query(query, [username, email, hashResult], (err, results, fields)=>{
           if(err) { 
             console.log('error happen during query:',err); 
             res.render('register', { title: 'registration failed' }); 
           } 
-          res.render('register', { title: 'registration completed' }); 
+
+          // login user after registration
+          db.query('SELECT LAST_INSERT_ID() as user_id', (err, results, fields)=>{
+            if(err) throw err;
+
+            let user_id = results[0]
+            console.log(user_id) 
+             
+            req.login(user_id, (err) =>{
+              // redirect to homepage after login
+              res.redirect('/')
+            })
+          }) 
+          // res.render('register', { title: 'registration completed' }); 
         }) 
       }) 
     }
   });
+
+
+// serialize before store session
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+// deserialize before read from session
+passport.deserializeUser(function(user, done) {
+  done( null,user);
+});
 
 module.exports = router;

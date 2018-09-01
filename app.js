@@ -18,10 +18,26 @@ app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+
+// require and init express-session
+var session = require('express-session')
+app.use(session({ 
+  secret: 'keyboard cat',
+  resave: false, 
+  saveUninitialized:false,
+  cookie: { maxAge: 60000 }
+}))
+
+// init passport
+var passport = require('passport')
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
