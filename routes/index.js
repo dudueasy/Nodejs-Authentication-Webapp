@@ -6,16 +6,23 @@ const passport = require('passport')
 const { check, validationResult } = require('express-validator/check');
 
 /* GET home page. */ 
-router.get('/', function(req, res, next) { 
+router.get('/', (req, res, next) => { 
 
+  console.log("req.session.passport:", req.session.passport)
+  console.log("req.session:", req.session)
   console.log("req.user:", req.user)
   console.log("req.isAuthenticated():", req.isAuthenticated())
   res.render('home', { title: 'Homepage' });
 });
 
+/* GET profile page. */
+router.get('/', (req, res, next) => { 
+
+
+})
 
 /* GET register page. */
-router.get('/register', function(req, res, next) {
+router.get('/register', (req, res, next) => {
   res.render('register', { title: 'registration' });
 });
 

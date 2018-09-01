@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session')
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -23,13 +24,26 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+
+// initialize MySQLStore
+let MySQLStore = require('express-mysql-session')(session);
+
+let options = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database : process.env.DB_NAME
+}
+
+var sessionStore = new MySQLStore(options);
+
 // require and init express-session
-var session = require('express-session')
 app.use(session({ 
   secret: 'keyboard cat',
   resave: false, 
+  store: sessionStore,
   saveUninitialized:false,
-  cookie: { maxAge: 60000 }
+  cookie: { maxAge: 6000* 60*24 }
 }))
 
 // init passport
