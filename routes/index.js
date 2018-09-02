@@ -7,7 +7,6 @@ const { check, validationResult } = require('express-validator/check');
 
 /* GET home page. */ 
 router.get('/', (req, res, next) => { 
-
   console.log("req.session.passport:", req.session.passport)
   console.log("req.session:", req.session)
   console.log("req.user:", req.user)
@@ -16,18 +15,36 @@ router.get('/', (req, res, next) => {
 });
 
 /* GET profile page. */
-router.get('/', (req, res, next) => { 
-
-
+router.get('/profile',authenticationMiddleware(),  (req, res, next) => { 
+  res.render('profile',  {title: 'Profile'}) 
 })
+
+
+/* GET login page. */
+router.get('/login', (req, res, next) => { 
+  res.render('login',  {title: 'Login'}) 
+})
+
+
+/* POST login page. */
+router.post('/login', 
+  passport.authenticate(
+    'local',{
+      successRedirect: '/profile',
+      failureRedirect: '/login'
+    }
+  )
+)
+
+
 
 /* GET register page. */
 router.get('/register', (req, res, next) => {
-  res.render('register', { title: 'registration' });
+  res.render('register', { title: 'Registration' });
 });
 
 
-/* post register user */
+/* POST register user */
 router.post(
   '/register', 
   [
@@ -69,20 +86,21 @@ router.post(
             console.log('error happen during query:',err); 
             res.render('register', { title: 'registration failed' }); 
           } 
+          else{ 
+            // login user after registration
+            db.query('SELECT LAST_INSERT_ID() as user_id', (err, results, fields)=>{
+              if(err) throw err;
 
-          // login user after registration
-          db.query('SELECT LAST_INSERT_ID() as user_id', (err, results, fields)=>{
-            if(err) throw err;
+              let user_id = results[0]
+              console.log('user_id:',user_id) 
 
-            let user_id = results[0]
-            console.log(user_id) 
-             
-            req.login(user_id, (err) =>{
-              // redirect to homepage after login
-              res.redirect('/')
+              // use passport req.login to log in user with user_id as session
+              req.login(user_id, (err) =>{
+                // redirect to homepage after login
+                res.redirect('/')
+              })
             })
-          }) 
-          // res.render('register', { title: 'registration completed' }); 
+          } 
         }) 
       }) 
     }
@@ -98,5 +116,16 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
   done( null,user);
 });
+
+// define a middleware to authenticate user
+function authenticationMiddleware(){
+  return (req, res, next)=>{
+    // if user is authenticated (logged-in), then jump to next middleware
+    if(req.isAuthenticated()) return next();
+
+    // else jump to login page
+    res.redirect('login') 
+  } 
+}
 
 module.exports = router;

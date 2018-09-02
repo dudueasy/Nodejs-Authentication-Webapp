@@ -2,15 +2,15 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session')
+var bcrypt = require('bcrypt')
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-var app = express();
 
+var app = express(); 
 require('dotenv').config();
 
 // view engine setup
@@ -20,22 +20,23 @@ app.set('view engine', 'hbs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
+// apply bodyParser
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
 // initialize MySQLStore
+const db = require('./db.js')
 let MySQLStore = require('express-mysql-session')(session);
-
 let options = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database : process.env.DB_NAME
 }
-
 var sessionStore = new MySQLStore(options);
+
 
 // require and init express-session
 app.use(session({ 
@@ -46,12 +47,58 @@ app.use(session({
   cookie: { maxAge: 6000* 60*24 }
 }))
 
+
 // init passport
 var passport = require('passport')
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(cookieParser());
+
+// define passport authentication strategy(logic) 
+var LocalStrategy = require('passport-local').Strategy
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+
+    // query database with provided username
+    db.query('SELECT id, password FROM users where username=? ', [username],(err, results, fields)=>{
+
+      // error handling with passport done()
+      if(err) {
+        throw done(err)
+      }
+      else if(results.length === 0){
+        return done(null, false, {message: 'user not exist'}) 
+      }
+      else{ 
+
+        // compare user provided password with hashed password (query result) with bcrypt module
+        // due to mysql password field type (binary), 
+        // results[0].password should be decoded with toString()
+        let hashedPassword = results[0].password.toString('utf-8') 
+
+        bcrypt.compare(password, hashedPassword, (error, result)=>{ 
+          // password match, login user
+          if(result) { 
+            let id = results[0].id
+            // let id = parseInt(results[0].id )
+            console.log( 'id:', id)
+
+            // call done to pass userData to req.login, which will be called automatically after passport.authenticate()  and finally finish login process
+            // the userData receive by done() should be of same structure as the one req.login() receive
+            // during register process
+            return done(null, {user_id:id})
+          }
+          else{ 
+            return done(null, false) 
+          }
+        }) 
+      }
+    })
+  })
+)
+
+
+// define static resources folder 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
@@ -95,7 +142,7 @@ filenames.forEach(function (filename) {
 });
 
 hbs.registerHelper('json', function(context) {
-    return JSON.stringify(context, null, 2);
+  return JSON.stringify(context, null, 2);
 });
 
 
