@@ -1,5 +1,5 @@
 # 说明
-一个 Express-MySQL 用户注册登录demo
+An Express-MySQL User Base App
 
 # 工程结构
 webpack + nodemon
@@ -14,8 +14,15 @@ mysqljs/mysql
 dotenv 
 ## 表单验证
 通过 express-validator 实现后台表单验证.  
-## hash 
+## hash user password
 bcrypt
+## session
+express-session
+## session store
+express-mysql-session
+## anthentication
+passport & passport-local
+
 
 
 
