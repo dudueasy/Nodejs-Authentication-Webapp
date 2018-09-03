@@ -38,7 +38,10 @@ router.post('/login',
 
 /* GET Logot page. */
 router.get('/logout', (req, res, next) => { 
+  // user passport req.logout to delete session
   req.logout()
+
+  res.clearCookie('connect.sid', { path: '/' });
   req.session.destroy( (err)=>{
     if(err) throw err
     res.redirect('/')

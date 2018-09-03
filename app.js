@@ -85,15 +85,12 @@ passport.use(new LocalStrategy(
         let hashedPassword = results[0].password.toString('utf-8') 
 
         bcrypt.compare(password, hashedPassword, (error, result)=>{ 
-          // password match, login user
+          // password match, enter user login process
           if(result) { 
-            let id = results[0].id
-            // let id = parseInt(results[0].id )
+            let id = parseInt(results[0].id )
+
             console.log( 'id:', id)
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
+
             // call done to pass userData to req.login, which will be called automatically after passport.authenticate()  and finally finish login process
             // the userData receive by done() should be of same structure as the one req.login() receive
             // during register process
