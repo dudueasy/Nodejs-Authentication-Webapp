@@ -34,8 +34,16 @@ router.post('/login',
       failureRedirect: '/login'
     }
   )
-)
+) 
 
+/* GET Logot page. */
+router.get('/logout', (req, res, next) => { 
+  req.logout()
+  req.session.destroy( (err)=>{
+    if(err) throw err
+    res.redirect('/')
+  }) 
+})
 
 
 /* GET register page. */
@@ -91,7 +99,7 @@ router.post(
             db.query('SELECT LAST_INSERT_ID() as user_id', (err, results, fields)=>{
               if(err) throw err;
 
-              let user_id = results[0]
+              let user_id = parseInt(results[0])
               console.log('user_id:',user_id) 
 
               // use passport req.login to log in user with user_id as session
