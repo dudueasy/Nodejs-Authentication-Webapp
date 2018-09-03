@@ -54,6 +54,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+// deliver user authentication status to template
+app.use((req, res, next)=>{
+  res.locals.isAuthenticated = req.isAuthenticated()
+  next() 
+  }
+)
+
+
 // define passport authentication strategy(logic) 
 var LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(
@@ -82,7 +90,10 @@ passport.use(new LocalStrategy(
             let id = results[0].id
             // let id = parseInt(results[0].id )
             console.log( 'id:', id)
-
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
             // call done to pass userData to req.login, which will be called automatically after passport.authenticate()  and finally finish login process
             // the userData receive by done() should be of same structure as the one req.login() receive
             // during register process
