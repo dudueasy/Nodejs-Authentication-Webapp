@@ -23,8 +23,8 @@ router.get('/profile', authenticationMiddleware(), (req, res, next) => {
   db.query('SELECT username, email FROM users where id=?', [req.user.user_id], (err, results, fields) => {
     if (err) throw err;
     else {
-      username = results[0].username 
-      email = results[0].email 
+      username = results[0].username
+      email = results[0].email
 
       res.render('profile', { username: username, email: email })
     }
@@ -43,7 +43,8 @@ router.post('/login',
   passport.authenticate(
     'local', {
       successRedirect: '/profile',
-      failureRedirect: '/login'
+      failureRedirect: '/login',
+      failureFlash: true
     }
   )
 )
@@ -74,15 +75,19 @@ router.post(
     check('username', 'username must be between 8-16 characters').isLength({ min: 8, max: 16 }),
     check('email').isEmail().withMessage('please input a valid email'),
     check('email').isLength({ min: 8, max: 100 }).withMessage('email must be between 8-100 characters'),
-    check('password').isLength({ min: 8, max: 100 }).withMessage('password should be at lease 8 characters').custom((value, { req, loc, path }) => {
-      if (value !== req.body.passwordMatch) {
-        // trow error if passwords do not match
-        throw new Error("Passwords don't match");
-      } else {
-        return value;
-      }
-    })
+    check('password').isLength({ min: 8, max: 100 })
+      .withMessage('password should be at lease 8 characters')
+      .custom(
+        (value, { req, loc, path }) => {
+          if (value !== req.body.passwordMatch) {
+            // trow error if passwords do not match
+            throw new Error("Passwords don't match");
+          } else {
+            return value;
+          }
+        }).withMessage("Passwords don't match")
   ]
+
   ,
   (req, res, next) => {
     let { username, email, password, passwordMatch } = req.body
@@ -112,14 +117,14 @@ router.post(
             sqlErrors = []
             console.log('error happen during query:', err);
             let message = err.sqlMessage
-              sqlErrors.push({msg: '创建用户失败'}) 
-            if(message.indexOf('username') >0){
-              sqlErrors.push({msg: '该用户名已被占用'})
+            sqlErrors.push({ msg: '创建用户失败' })
+            if (message.indexOf('username') > 0) {
+              sqlErrors.push({ msg: '该用户名已被占用' })
             }
-            if(message.indexOf('email') >0)
-            { sqlErrors.push({msg: '该邮箱已被占用'}) 
-            } 
-            res.render('register', { title: 'registration failed' , errors: sqlErrors});
+            if (message.indexOf('email') > 0) {
+              sqlErrors.push({ msg: '该邮箱已被占用' })
+            }
+            res.render('register', { title: 'registration failed', errors: sqlErrors });
           }
           else {
             // login user after registration
