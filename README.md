@@ -2,7 +2,7 @@
 An Express-MySQL User Base App
 
 # 工程结构
-webpack + nodemon
+nodemon
 
 # 模板引擎
 handlerbars
