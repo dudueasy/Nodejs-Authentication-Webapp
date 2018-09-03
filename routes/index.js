@@ -115,7 +115,8 @@ router.post(
               sqlErrors.push({msg: '创建用户失败'}) 
             if(message.indexOf('username') >0){
               sqlErrors.push({msg: '该用户名已被占用'})
-            }else if(message.indexOf('email') >0)
+            }
+            if(message.indexOf('email') >0)
             { sqlErrors.push({msg: '该邮箱已被占用'}) 
             } 
             res.render('register', { title: 'registration failed' , errors: sqlErrors});
