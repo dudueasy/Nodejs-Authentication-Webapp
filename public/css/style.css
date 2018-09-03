@@ -16,6 +16,10 @@
   border-color: black;
 }
 
+.navbar-brand > img{
+    height: 50px;
+}
+
 @media( max-width:768px ){
   .navbar-brand > img{
     height: 50px;
