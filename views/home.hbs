@@ -1,18 +1,83 @@
 {{> header }}
 <div class="container">
+  <div class="jumbotron" style="background: none">
+    <h1 class="display-3">Greeting!</h1>
+    <p class="lead">This is an user base webapp built with following features: </p>
 
-  <div class="jumbotron">
-    <h1 class="display-3">Demo heading</h1>
-    <p class="lead">This is an user base app built with following features:
-      <ul class="list-group">
-        <li class="list-group-item"> Express as server </li>
-        <li class="list-group-item"> Handlebars as template engine </li>
-        <li class="list-group-item"> Express-session & express-mysql-session as user session solution
-        </li>
-        <li class="list-group-item"> Express-validator as backend validation solution </li>
-        <li class="list-group-item"> Passport as authentication solution </li>
-      </ul>
-      <br>
-      <p><a class="btn btn-lg btn-success" href="https://github.com/dudueasy/Nodejs-Authentication-Webapp" role="button">Know
-          more</a></p>
+    <div class="accordion" id="accordion">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h5 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" aria-expanded="true" data-target="#collapseOne">
+              Server
+            </button>
+          </h5>
+        </div>
+        <div id="collapseOne" class="collapse show" data-parent="#accordion">
+          <div class="card-body">
+            Nodejs Express as server.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h5 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapseTwo">
+              Template
+            </button>
+          </h5>
+        </div>
+        <div id="collapseTwo" class="collapse" data-parent="#accordion">
+          <div class="card-body">
+            Handlebars as template engine.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="headingThree">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapseThree">
+            Session
+          </button>
+        </h5>
+      </div>
+      <div id="collapseThree" class="collapse " data-parent="#accordion">
+        <div class="card-body">
+          Express-session & express-mysql-session as user session and persistent session store solution.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="headingFour">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapseFour">
+            Validation
+          </button>
+        </h5>
+      </div>
+      <div id="collapseFour" class="collapse " data-parent="#accordion">
+        <div class="card-body">
+          Express-validator as backend validation solution for user registration.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="headingFive">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-toggle="collapse" aria-expanded="false" data-target="#collapseFive">
+            authentication
+          </button>
+        </h5>
+      </div>
+      <div id="collapseFive" class="collapse " data-parent="#accordion">
+        <div class="card-body">
+          Passport as authentication solution for user login.
+        </div>
+      </div>
+    </div>
+    <br>
+    <p><a class="btn btn-lg btn-outline-dark" href="https://github.com/dudueasy/Nodejs-Authentication-Webapp" role="button">Know
+        more
+      </a></p>
   </div>

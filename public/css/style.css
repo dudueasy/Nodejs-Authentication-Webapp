@@ -1,0 +1,16 @@
+.nav-link{
+  color: black;
+}
+
+.btn-link{
+  color:#000;
+}
+.btn-link:hover{
+  text-decoration: none;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: black;
+  border-color: black;
+}
