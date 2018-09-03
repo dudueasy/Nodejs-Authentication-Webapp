@@ -1,26 +1,26 @@
-# 说明
+## 项目说明
 An Express-MySQL User Base App
 
-# 工程结构
+## 工程结构
 nodemon
 
-# 模板引擎
+## 模板引擎
 handlerbars
 
-# 项目依赖和实现
-## 数据库
+## 项目依赖和实现
+### 数据库
 mysqljs/mysql
-## node环境配置
+### node环境配置
 dotenv 
-## 表单验证
+### 表单验证
 通过 express-validator 实现后台表单验证.  
-## hash user password
+### hash user password
 bcrypt
-## session
+### session
 express-session
-## session store
+### session store
 express-mysql-session
-## anthentication
+### anthentication
 passport & passport-local
 
 
