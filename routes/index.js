@@ -39,17 +39,11 @@ router.get('/login', (req, res, next) => {
 
 /* POST login page. */
 router.post('/login',
-  // passport.authenticate(
-  // 'local', {
-  //   successRedirect: '/profile',
-  //   failureRedirect: '/login',
-  //   failureMessage:true
-  // })
-  function (req, res, next) {
+   (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {
       if (err) { return next(err); }
       if (!user) { 
-        res.render('login', { message: 'login failed', title: 'login'}) 
+        res.render('login', { message: req.flash('message'), title: 'login'}) 
       }
       else {
         req.login(user, () => {

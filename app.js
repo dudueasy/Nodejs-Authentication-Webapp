@@ -5,10 +5,8 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser')
 var session = require('express-session')
+var flash = require('connect-flash') 
 var bcrypt = require('bcrypt')
-
-var index = require('./routes/index');
-var users = require('./routes/users');
 
 
 var app = express(); 
@@ -48,6 +46,8 @@ app.use(session({
   cookie: { maxAge: 6000* 60*24 }
 }))
 
+app.use(flash());
+
 
 // init passport
 var passport = require('passport')
@@ -65,8 +65,8 @@ app.use((req, res, next)=>{
 
 // define passport authentication strategy(logic) 
 var LocalStrategy = require('passport-local').Strategy
-passport.use(new LocalStrategy(
-  function(username, password, done) {
+passport.use(new LocalStrategy({ passReqToCallback: true},
+  function(req, username, password, done) {
 
     // query database with provided username
     db.query('SELECT id, password FROM users where username=? ', [username],(err, results, fields)=>{
@@ -76,7 +76,9 @@ passport.use(new LocalStrategy(
         throw done(err)
       }
       else if(results.length === 0){
-        return done(null, false, {message: 'user not exist'}) 
+
+        req.flash(message,'user does not exist')
+        return done(null, false, {message: 'user does not exist'}) 
       }
       else{ 
 
@@ -98,6 +100,7 @@ passport.use(new LocalStrategy(
             return done(null, {user_id:id})
           }
           else{ 
+            req.flash('message', 'incorrect passowrd')
             return done(null, false, {message: 'incorrect passowrd'}) 
           }
         }) 
@@ -106,6 +109,8 @@ passport.use(new LocalStrategy(
   })
 )
 
+var index = require('./routes/index');
+var users = require('./routes/users');
 
 // define static resources folder 
 app.use(express.static(path.join(__dirname, 'public')));
