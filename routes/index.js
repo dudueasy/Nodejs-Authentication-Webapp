@@ -20,11 +20,13 @@ router.get('/profile', authenticationMiddleware(), (req, res, next) => {
   // get userdata from database
   const db = require('../db.js')
 
-  db.query('SELECT username FROM users where id=?', [req.user.user_id], (err, results, fields) => {
+  db.query('SELECT username, email FROM users where id=?', [req.user.user_id], (err, results, fields) => {
     if (err) throw err;
     else {
       username = results[0].username 
-      res.render('profile', { username: username })
+      email = results[0].email 
+
+      res.render('profile', { username: username, email: email })
     }
   })
 })
@@ -90,6 +92,7 @@ router.post(
     const errors = validationResult(req);
     validationErrors = errors.array()
     if (!errors.isEmpty()) {
+      console.log(validationErrors)
       return res.render('register', { title: 'registration failed', errors: validationErrors })
     }
 
@@ -104,8 +107,18 @@ router.post(
         let query = `INSERT INTO users (username, email, password) VALUES (?,?,?)`
         db.query(query, [username, email, hashResult], (err, results, fields) => {
           if (err) {
+            // generate sqlError while error happen during the query
+
+            sqlErrors = []
             console.log('error happen during query:', err);
-            res.render('register', { title: 'registration failed' });
+            let message = err.sqlMessage
+              sqlErrors.push({msg: '创建用户失败'}) 
+            if(message.indexOf('username') >0){
+              sqlErrors.push({msg: '该用户名已被占用'})
+            }else if(message.indexOf('email') >0)
+            { sqlErrors.push({msg: '该邮箱已被占用'}) 
+            } 
+            res.render('register', { title: 'registration failed' , errors: sqlErrors});
           }
           else {
             // login user after registration
