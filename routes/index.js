@@ -41,9 +41,10 @@ router.get('/login', (req, res, next) => {
 router.post('/login',
    (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {
+      console.log('info in passport authenticate callback',info)
       if (err) { return next(err); }
       if (!user) { 
-        res.render('login', { message: req.flash('message'), title: 'login'}) 
+        res.render('login', { message: info.message, title: 'login'}) 
       }
       else {
         req.login(user, () => {

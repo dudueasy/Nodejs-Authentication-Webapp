@@ -3,9 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser')
 var session = require('express-session')
-var flash = require('connect-flash') 
 var bcrypt = require('bcrypt')
 
 
@@ -46,7 +44,6 @@ app.use(session({
   cookie: { maxAge: 6000* 60*24 }
 }))
 
-app.use(flash());
 
 
 // init passport
@@ -76,9 +73,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true},
         throw done(err)
       }
       else if(results.length === 0){
-
-        req.flash(message,'user does not exist')
-        return done(null, false, {message: 'user does not exist'}) 
+        return done(null, false, { message: 'user does not exist' }) 
       }
       else{ 
 
@@ -100,7 +95,6 @@ passport.use(new LocalStrategy({ passReqToCallback: true},
             return done(null, {user_id:id})
           }
           else{ 
-            req.flash('message', 'incorrect passowrd')
             return done(null, false, {message: 'incorrect passowrd'}) 
           }
         }) 
