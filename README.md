@@ -23,9 +23,8 @@ express-session
 express-mysql-session
 ### anthentication
 passport & passport-local
-### frontend notification
-connect-flash
-
+### process manager
+pm2
 
 
 
