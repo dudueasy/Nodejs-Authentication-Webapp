@@ -24,7 +24,8 @@ express-mysql-session
 passport & passport-local
 ### frontend notification
 connect-flash
-
+### Logger
+winston & winston-daily-rotate-file
 
 
 
