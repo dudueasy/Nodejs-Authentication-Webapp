@@ -1,13 +1,14 @@
 ## 项目说明
 An Express-MySQL User Base App
 
-## 工程结构
-nodemon
+## 启动服务器
+~~~
+npm run start
+~~~
 
-## 模板引擎
+## 项目依赖和实现 
+### 模板引擎
 handlerbars
-
-## 项目依赖和实现
 ### 数据库
 mysqljs/mysql
 ### node环境配置
@@ -26,6 +27,8 @@ passport & passport-local
 connect-flash
 ### Logger
 winston & winston-daily-rotate-file
+### process manager
+pm2
 
 
 
