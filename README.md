@@ -5,6 +5,8 @@ An Express-MySQL User Base App
 ~~~
 npm run start
 ~~~
+## 启动前配置 .env 文件
+请参考 .env.default 定义一个 .env 文件以完成node运行环境和数据库连接配置 
 
 ## 项目依赖和实现 
 ### 模板引擎
