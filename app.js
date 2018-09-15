@@ -52,7 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-// deliver user authentication status to template
+// deliver user authentication status to template with passport req.isAuthenticated()
 app.use((req, res, next)=>{
   res.locals.isAuthenticated = req.isAuthenticated()
   next() 
