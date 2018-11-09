@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt')
 const passport = require('passport')
+const logger = require('../utils/logger')
 
 const { check, validationResult } = require('express-validator/check');
 
@@ -39,7 +40,7 @@ router.get('/login', (req, res, next) => {
 
 /* POST login page. */
 router.post('/login',
-   (req, res, next) => {
+  (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {
       console.log('info in passport authenticate callback',info)
       if (err) { return next(err); }
@@ -82,16 +83,16 @@ router.post(
     check('email').isEmail().withMessage('please input a valid email'),
     check('email').isLength({ min: 8, max: 100 }).withMessage('email must be between 8-100 characters'),
     check('password').isLength({ min: 8, max: 100 })
-      .withMessage('password should be at lease 8 characters')
-      .custom(
-        (value, { req, loc, path }) => {
-          if (value !== req.body.passwordMatch) {
-            // trow error if passwords do not match
-            throw new Error("Passwords don't match");
-          } else {
-            return value;
-          }
-        }).withMessage("Passwords don't match")
+    .withMessage('password should be at lease 8 characters')
+    .custom(
+      (value, { req, loc, path }) => {
+        if (value !== req.body.passwordMatch) {
+          // trow error if passwords do not match
+          throw new Error("Passwords don't match");
+        } else {
+          return value;
+        }
+      }).withMessage("Passwords don't match")
   ]
 
   ,
@@ -120,8 +121,8 @@ router.post(
           if (err) {
             // generate sqlError while error happen during the query
 
-            sqlErrors = []
-            console.log('error happen during query:', err);
+            sqlErrors = [] 
+            logger('error',err)
             let message = err.sqlMessage
             sqlErrors.push({ msg: '创建用户失败' })
             if (message.indexOf('username') > 0) {
