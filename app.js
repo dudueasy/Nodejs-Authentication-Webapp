@@ -9,7 +9,7 @@ const logger = require('./utils/logger')
 
 
 var app = express(); 
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
